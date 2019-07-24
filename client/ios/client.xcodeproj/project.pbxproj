@@ -18,6 +18,7 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* clientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* clientTests.m */; };
 		579EA4E5880DBD4EC7566AFC /* libPods-client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5447399212B2283A975E2493 /* libPods-client.a */; };
+		7EE1ED2D22E903E3004C4157 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EE1ED2A22E903D7004C4157 /* libRCTPushNotification.a */; };
 		C8D3BB2F3749C04AE5DFD73D /* libPods-client-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FDE32279DD2179129179BC43 /* libPods-client-tvOSTests.a */; };
 		EE2DAA2926D9FB64651CCE39 /* libPods-client-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D54264E54A65F1B4CE3E5AE5 /* libPods-client-tvOS.a */; };
 /* End PBXBuildFile section */
@@ -36,6 +37,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
 			remoteInfo = "client-tvOS";
+		};
+		7EE1ED2922E903D7004C4157 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7EE1ED2422E903D7004C4157 /* RCTPushNotification.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RCTPushNotification;
+		};
+		7EE1ED2B22E903D7004C4157 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7EE1ED2422E903D7004C4157 /* RCTPushNotification.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3D05745F1DE6004600184BB4;
+			remoteInfo = "RCTPushNotification-tvOS";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -60,6 +75,7 @@
 		5176A4A6357B45E931428DDF /* Pods-client-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-client-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-client-tvOSTests/Pods-client-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		5447399212B2283A975E2493 /* libPods-client.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-client.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EE1ED1722E77F3B004C4157 /* client.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = client.entitlements; path = client/client.entitlements; sourceTree = "<group>"; };
+		7EE1ED2422E903D7004C4157 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		A05970BFB142EBA534BCACE2 /* Pods-client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-client.debug.xcconfig"; path = "Target Support Files/Pods-client/Pods-client.debug.xcconfig"; sourceTree = "<group>"; };
 		D54264E54A65F1B4CE3E5AE5 /* libPods-client-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-client-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9A95F8803BB6C8D7922C284 /* Pods-client-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-client-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-client-tvOS/Pods-client-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -84,6 +100,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				579EA4E5880DBD4EC7566AFC /* libPods-client.a in Frameworks */,
+				7EE1ED2D22E903E3004C4157 /* libRCTPushNotification.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,9 +168,19 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		7EE1ED2522E903D7004C4157 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7EE1ED2A22E903D7004C4157 /* libRCTPushNotification.a */,
+				7EE1ED2C22E903D7004C4157 /* libRCTPushNotification-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				7EE1ED2422E903D7004C4157 /* RCTPushNotification.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -325,6 +352,12 @@
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 7EE1ED2522E903D7004C4157 /* Products */;
+					ProjectRef = 7EE1ED2422E903D7004C4157 /* RCTPushNotification.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* client */,
@@ -334,6 +367,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		7EE1ED2A22E903D7004C4157 /* libRCTPushNotification.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTPushNotification.a;
+			remoteRef = 7EE1ED2922E903D7004C4157 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		7EE1ED2C22E903D7004C4157 /* libRCTPushNotification-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRCTPushNotification-tvOS.a";
+			remoteRef = 7EE1ED2B22E903D7004C4157 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		00E356EC1AD99517003FC87E /* Resources */ = {

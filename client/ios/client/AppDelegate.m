@@ -9,6 +9,7 @@
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import </Users/cameron/Desktop/facetracker/client/node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotificationManager.h>
 
 
 @implementation AppDelegate

@@ -59,13 +59,14 @@ def publish_callback(result, status):
     # Handle PNPublishResult and PNStatus
 
 def addUser(ID, name):
-    global known_face_encodings, known_face_names
+    global known_face_encodings, known_face_names, flag
     path = './Unknown_User' + str(ID)
     # Load a sample picture and learn how to recognize it.
     user_image = face_recognition.load_image_file('% s.jpg' % (path)) # Load Image
     user_face_encoding = face_recognition.face_encodings(user_image)[0] # Encode Image
     known_face_encodings.append(user_face_encoding) # Add Encoded Image to 'Known Faces' array
     known_face_names.append(name)
+    flag = 0
 
 def sendAlert():
     global count
@@ -91,7 +92,7 @@ def sendAlert():
     status = cv2.imwrite('% s/% s.jpg' % (path, name),gray)
     print('Unknown User Saved to Database', status)
 
-    #upload_files('% s/% s.jpg' % (path,name))
+    upload_files('% s/% s.jpg' % (path,name))
 
 class MySubscribeCallback(SubscribeCallback):
     def status(self, pubnub, status):

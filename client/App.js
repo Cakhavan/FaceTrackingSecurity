@@ -6,6 +6,8 @@ import {
   ScrollView,
   View,
   Text,
+  TextInput,
+  TouchableOpacity,
   StatusBar,
   Image,
 } from 'react-native';
@@ -34,7 +36,9 @@ export default class App extends React.Component {
     //Base State
     this.state = {
       image: require('./assets/dylan.jpg'),
-      message: 'hel'
+      message: 'hel',
+      text: '',
+      count: 0,
     }
 
     this.pubnub.init(this);
@@ -46,7 +50,7 @@ export default class App extends React.Component {
 
   async setUpApp(){
     this.pubnub.getMessage("global", msg => {
-      this.setState({message: msg.message.ID})
+      this.setState({count: msg.message.ID})
       this.setState({image: msg.message.url})
     })
 
@@ -61,6 +65,19 @@ export default class App extends React.Component {
 
   }
 
+  handleText = (name) => {
+    this.setState({ text: name })
+ }
+
+ publishName = (text) => {
+  this.pubnub.publish({
+    message: {
+      ID: this.state.count,
+      name: text,
+    },
+    channel: "ch1"
+  });
+}
 
   render() {
   return(
@@ -71,7 +88,20 @@ export default class App extends React.Component {
         source={{uri: this.state.image}}
         style={{width: 250, height: 250}}
       />
-      <Text>{this.state.message}</Text>
+      <Text>{'Do You Know This Person?'}</Text>
+      <TextInput style = {styles.input}
+               underlineColorAndroid = "transparent"
+               placeholder = "Name"
+               placeholderTextColor = "#9a73ef"
+               autoCapitalize = "none"
+               onChangeText = {this.handleText}/>
+      <TouchableOpacity
+          style = {styles.submitButton}
+          onPress = {
+            () => this.publishName(this.state.text)
+          }>
+            <Text>"SUBMIT"</Text>
+      </TouchableOpacity>
 
     </View>
 
