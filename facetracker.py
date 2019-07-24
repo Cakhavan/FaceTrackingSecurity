@@ -24,6 +24,7 @@ video_capture = cv2.VideoCapture(0)
 known_face_names = []
 known_face_encodings = []
 count = 0
+flag = 0
 # config
 os.chdir(os.path.join(os.path.dirname(sys.argv[0]), '.'))
 if os.path.exists('settings.py'):
@@ -57,38 +58,14 @@ def publish_callback(result, status):
     pass
     # Handle PNPublishResult and PNStatus
 
-def addUser(msg):
+def addUser(ID, name):
     global known_face_encodings, known_face_names
-
-    video_capture = cv2.VideoCapture(0)
-    path = './'
-    print('Adding User: ', msg)
-    known_face_names.append(msg)
-    print('Make sure ', msg, 'is the only one on the screen')
-
-    # Wait for 3 seconds
-    print('Taking picture in 3')
-    time.sleep(1)
-    print('Taking picture in 2')
-    time.sleep(1)
-    print('Taking picture in 1')
-    time.sleep(1)
-
-    # Take Picture
-    ret, frame = video_capture.read()
-    
-    # Grayscale Image
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) 
-
-    # Save Image in File Path
-    status = cv2.imwrite('% s/% s.jpg' % (path, msg),gray)
-    print(msg, ' added to file system: ', status)
-
+    path = './Unknown_User' + str(ID)
     # Load a sample picture and learn how to recognize it.
-    user_image = face_recognition.load_image_file('% s/% s.jpg' % (path,msg)) # Load Image
+    user_image = face_recognition.load_image_file('% s.jpg' % (path)) # Load Image
     user_face_encoding = face_recognition.face_encodings(user_image)[0] # Encode Image
     known_face_encodings.append(user_face_encoding) # Add Encoded Image to 'Known Faces' array
-    upload_files('% s/% s.jpg' % (path,msg))
+    known_face_names.append(name)
 
 def sendAlert():
     global count
@@ -114,7 +91,7 @@ def sendAlert():
     status = cv2.imwrite('% s/% s.jpg' % (path, name),gray)
     print('Unknown User Saved to Database', status)
 
-    upload_files('% s/% s.jpg' % (path,name))
+    #upload_files('% s/% s.jpg' % (path,name))
 
 class MySubscribeCallback(SubscribeCallback):
     def status(self, pubnub, status):
@@ -164,7 +141,7 @@ class MySubscribeCallback(SubscribeCallback):
     def presence(self, pubnub, presence):
         pass  # handle incoming presence data
     def message(self, pubnub, message):
-        addUser(message.message)
+        addUser(message.message["ID"], message.message["name"])
  
  
 pubnub.add_listener(MySubscribeCallback())
@@ -230,8 +207,8 @@ while(True):
                 name = known_face_names[best_match_index]
 
             face_names.append(name)
-
-            if(name=='Unknown' & flag==0):
+            global flag
+            if(name=='Unknown' and flag==0):
                 flag = 1
                 sendAlert()
 
