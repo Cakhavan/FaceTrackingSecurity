@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react';
 import PubNubReact from 'pubnub-react';
+import os
 import {
   SafeAreaView,
   StyleSheet,
@@ -45,7 +46,7 @@ export default class App extends React.Component {
   }
 
   async componentDidMount() {
-    this.setUpApp()
+    this.setUpApp()    
   }
 
   async setUpApp(){

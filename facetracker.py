@@ -4,6 +4,9 @@ import numpy as np
 import time
 import os,sys
 
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+
 from cloudinary.api import delete_resources_by_tag, resources_by_tag
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
@@ -32,8 +35,23 @@ if os.path.exists('settings.py'):
 
 DEFAULT_TAG = "python_sample_basic"
 
-
-
+def sendEmail():
+    message = Mail(
+    from_email='cameron@pubnub.com',
+    to_emails='cameron@pubnub.com',
+    subject='Unknown User Alert',
+    html_content='<strong>There is an unregistered user at your desk!</strong>')
+    try:
+        print('success')
+        sg = SendGridAPIClient(os.environ.get('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'))
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+    except Exception as e:
+        print('failure')
+        print(e)
+        
 def dump_response(response):
     print("Upload response:")
     for key in sorted(response.keys()):
@@ -92,7 +110,11 @@ def sendAlert():
     status = cv2.imwrite('% s/% s.jpg' % (path, name),gray)
     print('Unknown User Saved to Database', status)
 
-    upload_files('% s/% s.jpg' % (path,name))
+    #upload_files('% s/% s.jpg' % (path,name))
+    sendEmail()
+
+
+
 
 class MySubscribeCallback(SubscribeCallback):
     def status(self, pubnub, status):
