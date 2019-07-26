@@ -21,32 +21,34 @@ from pubnub.pnconfiguration import PNConfiguration
 from pubnub.pubnub import PubNub
 from pubnub.enums import PNOperationType, PNStatusCategory
 
+# PubNub Config
 pnconfig = PNConfiguration()
 pnconfig.subscribe_key = "sub-c-35ba70c2-acae-11e9-a577-e6e01a51e1d3"
 pnconfig.publish_key = "pub-c-65d7292f-2d66-4bcb-af81-756159a296d0"
 pnconfig.ssl = False
 pubnub = PubNub(pnconfig)
 
-# Configure HTTP basic authorization: BasicAuth
+# ClickSend Config
 configuration = clicksend_client.Configuration()
 configuration.username = 'cakhavan'
 configuration.password = 'E818D17B-8150-7D70-8B20-F0235B07D37F'
 
-# Get a reference to webcam #0 (the default one)
+# Cloudinary Config
+os.chdir(os.path.join(os.path.dirname(sys.argv[0]), '.'))
+if os.path.exists('settings.py'):
+    exec(open('settings.py').read())
+DEFAULT_TAG = "python_sample_basic"
+
+# Setup some Global Variables
 video_capture = cv2.VideoCapture(0)
 known_face_names = []
 known_face_encodings = []
 count = 0
 flag = 0
-# config
-os.chdir(os.path.join(os.path.dirname(sys.argv[0]), '.'))
-if os.path.exists('settings.py'):
-    exec(open('settings.py').read())
 
-DEFAULT_TAG = "python_sample_basic"
 
 def sendText():
-    # create an instance of the API class
+    # Create API Instance
     api_instance = clicksend_client.SMSApi(clicksend_client.ApiClient(configuration))
     sms_message = SmsMessage(source="php",
                             body="There is an unregistered user at your desk!",
@@ -62,11 +64,13 @@ def sendText():
         print("Exception when calling SMSApi->sms_send_post: %s\n" % e)
 
 def sendEmail():
+    # Create API Instance
     message = Mail(
     from_email='cameron@pubnub.com',
     to_emails='cameron@pubnub.com',
     subject='Unknown User Alert',
     html_content='<strong>There is an unregistered user at your desk!</strong>')
+    # Send Email
     try:
         print('success')
         sg = SendGridAPIClient(os.environ.get('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'))
@@ -78,16 +82,10 @@ def sendEmail():
         print('failure')
         print(e)
         
-def dump_response(response):
-    print("Upload response:")
-    for key in sorted(response.keys()):
-        print("  %s: %s" % (key, response[key]))
-
 def upload_files(msg):
     global count
-    response = upload(msg, tags=DEFAULT_TAG)
-    dump_response(response)
-    url, options = cloudinary_url(
+    response = upload(msg, tags=DEFAULT_TAG) # Upload Image to Cloudinary
+    url, options = cloudinary_url( #
         response['public_id'],
         format=response['format'],
         width=200,
@@ -104,19 +102,19 @@ def publish_callback(result, status):
 
 def addUser(ID, name):
     global known_face_encodings, known_face_names, flag
-    path = './Unknown_User' + str(ID)
-    # Load a sample picture and learn how to recognize it.
+    path = './Unknown_User' + str(ID) # Append User ID to File Path
+    # Load User's picture and learn how to recognize it.
     user_image = face_recognition.load_image_file('% s.jpg' % (path)) # Load Image
     user_face_encoding = face_recognition.face_encodings(user_image)[0] # Encode Image
-    known_face_encodings.append(user_face_encoding) # Add Encoded Image to 'Known Faces' array
-    known_face_names.append(name)
-    flag = 0
+    known_face_encodings.append(user_face_encoding) # Add Encoded Image to 'Known Faces' Array
+    known_face_names.append(name) # Append New User's Name to Database
+    flag = 0 # Reset Unkown User Flag
 
 def sendAlert():
     global count
-    video_capture = cv2.VideoCapture(0)
+    video_capture = cv2.VideoCapture(0) # Create Open CV Webcam Instance
     path = './'
-    name = 'Unknown_User' + str(count)
+    name = 'Unknown_User' + str(count) # Append User ID to File Path
 
     # Wait for 3 seconds
     print('Taking picture in 3')
@@ -136,8 +134,8 @@ def sendAlert():
     status = cv2.imwrite('% s/% s.jpg' % (path, name),gray)
     print('Unknown User Saved to Database', status)
 
-    #upload_files('% s/% s.jpg' % (path,name))
-    #sendEmail()
+    upload_files('% s/% s.jpg' % (path,name))
+    sendEmail()
     sendText()
 
 
@@ -210,6 +208,8 @@ known_face_encodings = [
     obama_face_encoding,
     biden_face_encoding
 ]
+
+# Create Names for Sample Face encodings
 known_face_names = [
     "adam",
     "dylan"
@@ -257,6 +257,8 @@ while(True):
                 name = known_face_names[best_match_index]
 
             face_names.append(name)
+
+            # Set Unkown User Flag and Send Alerts
             global flag
             if(name=='Unknown' and flag==0):
                 flag = 1
