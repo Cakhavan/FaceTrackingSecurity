@@ -1,3 +1,8 @@
+from __future__ import print_function
+import clicksend_client
+from clicksend_client import SmsMessage
+from clicksend_client.rest import ApiException
+
 import face_recognition
 import cv2
 import numpy as np
@@ -22,6 +27,11 @@ pnconfig.publish_key = "pub-c-65d7292f-2d66-4bcb-af81-756159a296d0"
 pnconfig.ssl = False
 pubnub = PubNub(pnconfig)
 
+# Configure HTTP basic authorization: BasicAuth
+configuration = clicksend_client.Configuration()
+configuration.username = 'cakhavan'
+configuration.password = 'E818D17B-8150-7D70-8B20-F0235B07D37F'
+
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(0)
 known_face_names = []
@@ -34,6 +44,22 @@ if os.path.exists('settings.py'):
     exec(open('settings.py').read())
 
 DEFAULT_TAG = "python_sample_basic"
+
+def sendText():
+    # create an instance of the API class
+    api_instance = clicksend_client.SMSApi(clicksend_client.ApiClient(configuration))
+    sms_message = SmsMessage(source="php",
+                            body="There is an unregistered user at your desk!",
+                            to="+16504301463",
+                            schedule=1436874701)
+    sms_messages = clicksend_client.SmsMessageCollection(messages=[sms_message])
+
+    try:
+        # Send sms message(s)
+        api_response = api_instance.sms_send_post(sms_messages)
+        print(api_response)
+    except ApiException as e:
+        print("Exception when calling SMSApi->sms_send_post: %s\n" % e)
 
 def sendEmail():
     message = Mail(
@@ -111,7 +137,8 @@ def sendAlert():
     print('Unknown User Saved to Database', status)
 
     #upload_files('% s/% s.jpg' % (path,name))
-    sendEmail()
+    #sendEmail()
+    sendText()
 
 
 
