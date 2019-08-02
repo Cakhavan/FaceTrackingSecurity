@@ -4,10 +4,16 @@ With a simple webcam, your program will be able to recognize the faces of people
 
 ![](finalfacetrack.gif)
 
+
+Here is the PubNub Cloudinary framework
+
+![](clouddiagrambetter(1).png)
+
 # How To Run
 
 Requirements: 
 
+* Latest version of Python
 * Node.js
 * React Native CLI
 * Xcode and iOS simulator
