@@ -4,6 +4,12 @@ With a simple webcam, your program will be able to recognize the faces of people
 
 # How To Run
 
+Requirements: 
+
+* Node.js
+* React Native CLI
+* Xcode and iOS simulator
+
 1.) In your terminal run the command `npm i` 
 
 2.) Enter the command `pip install opencv-python`
