@@ -1,10 +1,7 @@
 import React, {Fragment} from 'react';
 import PubNubReact from 'pubnub-react';
-import os
 import {
-  SafeAreaView,
   StyleSheet,
-  ScrollView,
   View,
   Text,
   TextInput,

@@ -1,20 +1,8 @@
-from __future__ import print_function
-import clicksend_client
-from clicksend_client import SmsMessage
-from clicksend_client.rest import ApiException
-
-import face_recognition
-import cv2
-import numpy as np
+import face_recognition # Machine Learning Library for Face Recognition
+import cv2 # OpenCV
+import numpy as np # Handling data
 import time
 import os,sys
-
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
-
-from cloudinary.api import delete_resources_by_tag, resources_by_tag
-from cloudinary.uploader import upload
-from cloudinary.utils import cloudinary_url
 
 from pubnub.callbacks import SubscribeCallback
 from pubnub.pnconfiguration import PNConfiguration
@@ -28,10 +16,9 @@ pnconfig.publish_key = "pub-c-65d7292f-2d66-4bcb-af81-756159a296d0"
 pnconfig.ssl = False
 pubnub = PubNub(pnconfig)
 
-# ClickSend Config
-configuration = clicksend_client.Configuration()
-configuration.username = 'cakhavan'
-configuration.password = 'E818D17B-8150-7D70-8B20-F0235B07D37F'
+from cloudinary.api import delete_resources_by_tag, resources_by_tag
+from cloudinary.uploader import upload
+from cloudinary.utils import cloudinary_url
 
 # Cloudinary Config
 os.chdir(os.path.join(os.path.dirname(sys.argv[0]), '.'))
@@ -40,48 +27,27 @@ if os.path.exists('settings.py'):
 DEFAULT_TAG = "python_sample_basic"
 
 # Setup some Global Variables
-video_capture = cv2.VideoCapture(0)
-known_face_names = []
-known_face_encodings = []
-count = 0
-flag = 0
+video_capture = cv2.VideoCapture(0) # Webcam instance
+known_face_names = [] # Names of faces
+known_face_encodings = [] # Encodings of Faces
+count = 0 # Counter for Number of Unknown Users
+flag = 0 # Flag for Setting/Unsetting "Intruder Mode"
 
+def sendAlerts():
+    dictionary = {
+    "to" : 'RECEIVING PHONE NUMBER',
+    "body": "There is an unregistered user at your desk!"
+    }
+    pubnub.publish().channel('clicksend-text').message(dictionary).pn_async(publish_callback)
 
-def sendText():
-    # Create API Instance
-    api_instance = clicksend_client.SMSApi(clicksend_client.ApiClient(configuration))
-    sms_message = SmsMessage(source="php",
-                            body="There is an unregistered user at your desk!",
-                            to="+16504301463",
-                            schedule=1436874701)
-    sms_messages = clicksend_client.SmsMessageCollection(messages=[sms_message])
-
-    try:
-        # Send sms message(s)
-        api_response = api_instance.sms_send_post(sms_messages)
-        print(api_response)
-    except ApiException as e:
-        print("Exception when calling SMSApi->sms_send_post: %s\n" % e)
-
-def sendEmail():
-    # Create API Instance
-    message = Mail(
-    from_email='cameron@pubnub.com',
-    to_emails='cameron@pubnub.com',
-    subject='Unknown User Alert',
-    html_content='<strong>There is an unregistered user at your desk!</strong>')
-    # Send Email
-    try:
-        print('success')
-        sg = SendGridAPIClient(os.environ.get('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'))
-        response = sg.send(message)
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
-    except Exception as e:
-        print('failure')
-        print(e)
-        
+    dictionary = {
+    "to": "EMAIL RECEIVER",
+    "toname": "EMAIL SENDER",
+    "subject": "INTRUDER ALERT",
+    "text": "THERE IS AN UNREGISTERED USER AT YOUR DESK"
+    }   
+    pubnub.publish().channel('email-sendgrid-channel').message(dictionary).pn_async(publish_callback)
+   
 def upload_files(msg):
     global count
     response = upload(msg, tags=DEFAULT_TAG) # Upload Image to Cloudinary
@@ -108,12 +74,12 @@ def addUser(ID, name):
     user_face_encoding = face_recognition.face_encodings(user_image)[0] # Encode Image
     known_face_encodings.append(user_face_encoding) # Add Encoded Image to 'Known Faces' Array
     known_face_names.append(name) # Append New User's Name to Database
-    flag = 0 # Reset Unkown User Flag
+    flag = 0 # Reset Unknown User Flag
 
-def sendAlert():
+def Alert():
     global count
     video_capture = cv2.VideoCapture(0) # Create Open CV Webcam Instance
-    path = './'
+    path = './' # Specify where you want the snapshot to be stored
     name = 'Unknown_User' + str(count) # Append User ID to File Path
 
     # Wait for 3 seconds
@@ -134,9 +100,11 @@ def sendAlert():
     status = cv2.imwrite('% s/% s.jpg' % (path, name),gray)
     print('Unknown User Saved to Database', status)
 
+    # Upload Snapshot to Cloudinary 
     upload_files('% s/% s.jpg' % (path,name))
-    sendEmail()
-    sendText()
+
+    # Send Out Email and Text Alerts
+    sendAlerts()
 
 
 
@@ -258,11 +226,11 @@ while(True):
 
             face_names.append(name)
 
-            # Set Unkown User Flag and Send Alerts
+            # Set Unknown User Flag and Send Alerts
             global flag
             if(name=='Unknown' and flag==0):
                 flag = 1
-                sendAlert()
+                Alert()
 
 
     process_this_frame = not process_this_frame
