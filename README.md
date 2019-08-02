@@ -7,7 +7,7 @@ With a simple webcam, your program will be able to recognize the faces of people
 
 Here is the PubNub Cloudinary framework
 
-![](clouddiagrambetter (1).png)
+![](clouddiagrambetter_(1).png)
 
 # How To Run
 
