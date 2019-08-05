@@ -2,7 +2,7 @@
 
 With a simple webcam, your program will be able to recognize the faces of people you choose to allow into the system. It will trigger a text, email, and snapshot image alert system, if any unrecognized faces appear in front of your webcam. We’ll also use Cloudinary and PubNub to build a React Native application that can receive a snapshot image of an “intruder’s” face. It will also allow a user to be added to the system if you desire.
 
-![](facetrackeroptmized.gif)
+![](facetrackeroptimized.gif)
 
 
 PubNub Cloudinary framework
