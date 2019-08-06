@@ -27,8 +27,8 @@ export default class App extends React.Component {
     super(props)
 
     this.pubnub = new PubNubReact({
-      publishKey: "pub-c-65d7292f-2d66-4bcb-af81-756159a296d0",
-      subscribeKey: "sub-c-35ba70c2-acae-11e9-a577-e6e01a51e1d3"
+      publishKey: "YOUR PUBLISH KEY",
+      subscribeKey: "YOUR SUBSCRIBE KEY"
     })
 
     //Base State

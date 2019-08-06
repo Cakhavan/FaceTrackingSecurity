@@ -11,8 +11,8 @@ from pubnub.enums import PNOperationType, PNStatusCategory
 
 # PubNub Config
 pnconfig = PNConfiguration()
-pnconfig.subscribe_key = "sub-c-35ba70c2-acae-11e9-a577-e6e01a51e1d3"
-pnconfig.publish_key = "pub-c-65d7292f-2d66-4bcb-af81-756159a296d0"
+pnconfig.subscribe_key = "YOUR SUBSCRIBE KEY"
+pnconfig.publish_key = "YOUR PUBLISH KEY"
 pnconfig.ssl = False
 pubnub = PubNub(pnconfig)
 
